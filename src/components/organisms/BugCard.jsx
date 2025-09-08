@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
+import BugTimeline from "@/components/organisms/BugTimeline";
+import ApperIcon from "@/components/ApperIcon";
+import PriorityIndicator from "@/components/molecules/PriorityIndicator";
+import StatusBadge from "@/components/molecules/StatusBadge";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
-import StatusBadge from "@/components/molecules/StatusBadge";
-import PriorityIndicator from "@/components/molecules/PriorityIndicator";
-import ApperIcon from "@/components/ApperIcon";
-
 const BugCard = ({ bug, onEdit, onDelete, onStatusChange }) => {
+  const [showTimeline, setShowTimeline] = useState(false);
   const getNextStatus = () => {
     const statusFlow = {
       "new": "assigned",
@@ -20,6 +21,9 @@ const BugCard = ({ bug, onEdit, onDelete, onStatusChange }) => {
   };
 
   const nextStatus = getNextStatus();
+const toggleTimeline = () => {
+    setShowTimeline(!showTimeline);
+  };
 
   return (
     <motion.div
@@ -28,7 +32,18 @@ const BugCard = ({ bug, onEdit, onDelete, onStatusChange }) => {
       transition={{ duration: 0.3 }}
     >
       <Card hover className="p-6">
-        <div className="flex items-start justify-between mb-4">
+<div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTimeline}
+              className="text-gray-500 hover:text-gray-700 p-2"
+              title={showTimeline ? "Hide Timeline" : "Show Timeline"}
+            >
+              <ApperIcon name="Clock" className="w-4 h-4" />
+            </Button>
+          </div>
           <div className="flex items-start gap-3">
             <PriorityIndicator priority={bug.severity} />
             <div className="flex-1">
@@ -72,8 +87,14 @@ const BugCard = ({ bug, onEdit, onDelete, onStatusChange }) => {
               </span>
             </div>
           )}
-        </div>
-
+</div>
+        
+        <BugTimeline 
+          bug={bug}
+          isOpen={showTimeline}
+          onClose={() => setShowTimeline(false)}
+        />
+        
         <div className="flex items-center justify-between pt-4 border-t border-gray-200">
           <div className="flex items-center gap-2">
             <Button

@@ -27,11 +27,19 @@ export const bugService = {
   async create(bugData) {
     await delay(450);
     const newBug = {
-      Id: Math.max(...bugs.map(b => b.Id)) + 1,
+Id: Math.max(...bugs.map(b => b.Id)) + 1,
       ...bugData,
       status: "new",
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      timeline: [{
+        id: 'created',
+        type: 'created',
+        title: 'Bug Report Created',
+        description: `Bug report "${bugData.title}" was created`,
+        timestamp: new Date().toISOString(),
+        user: bugData.reporter || 'Unknown'
+      }]
     };
     bugs.push(newBug);
     return { ...newBug };
@@ -57,12 +65,39 @@ export const bugService = {
     if (index === -1) {
       throw new Error("Bug not found");
     }
-    bugs[index] = {
+const updatedBug = {
       ...bugs[index],
       status,
       updatedAt: new Date().toISOString()
     };
-    return { ...bugs[index] };
+    bugs[index] = updatedBug;
+    
+// Add timeline entry for status change
+    if (updatedBug.timeline) {
+      updatedBug.timeline = [...updatedBug.timeline, {
+        id: `status_change_${Date.now()}`,
+        type: 'status_change', 
+        title: 'Status Changed',
+        description: `Status updated to ${status.replace('-', ' ')}`,
+        timestamp: new Date().toISOString(),
+        user: updatedBug.assignee || 'System',
+        details: {
+          'previous status': bugs[index].status,
+          'new status': status
+        }
+      }];
+    } else {
+      updatedBug.timeline = [{
+        id: `status_change_${Date.now()}`,
+        type: 'status_change',
+        title: 'Status Changed', 
+        description: `Status updated to ${status.replace('-', ' ')}`,
+        timestamp: new Date().toISOString(),
+        user: updatedBug.assignee || 'System'
+      }];
+    }
+    bugs[index] = updatedBug;
+return { ...updatedBug };
   },
 
   async delete(id) {

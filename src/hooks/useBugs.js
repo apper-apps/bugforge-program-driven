@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { bugService } from "@/services/api/bugService";
-
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { bugService } from '@/services/api/bugService';
 const useBugs = () => {
   const [bugs, setBugs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -19,25 +19,28 @@ const useBugs = () => {
     }
   };
 
-  const createBug = async (bugData) => {
+const createBug = async (bugData) => {
     const newBug = await bugService.create(bugData);
     setBugs(prev => [...prev, newBug]);
+    toast.success('Bug reported successfully');
     return newBug;
   };
 
   const updateBug = async (id, bugData) => {
     const updatedBug = await bugService.update(id, bugData);
-    setBugs(prev => prev.map(b => 
-      b.Id === parseInt(id) ? updatedBug : b
-    ));
-    return updatedBug;
+setBugs(prev => prev.map(b => 
+       b.Id === parseInt(id) ? updatedBug : b
+     ));
+     toast.success('Bug updated successfully');
+     return updatedBug;
   };
 
   const updateBugStatus = async (id, status) => {
-    const updatedBug = await bugService.updateStatus(id, status);
-    setBugs(prev => prev.map(b => 
-      b.Id === parseInt(id) ? updatedBug : b
-    ));
+const updatedBug = await bugService.updateStatus(id, status);
+     setBugs(prev => prev.map(b => 
+       b.Id === parseInt(id) ? updatedBug : b
+     ));
+     toast.success(`Bug status updated to ${status.replace("-", " ")}`);
     return updatedBug;
   };
 
