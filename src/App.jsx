@@ -1,20 +1,20 @@
-import { createContext, useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import React, { createContext, useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import { setUser, clearUser } from './store/userSlice';
-import Login from '@/components/pages/Login';
-import Signup from '@/components/pages/Signup';
-import Callback from '@/components/pages/Callback';
-import ErrorPage from '@/components/pages/ErrorPage';
-import ResetPassword from '@/components/pages/ResetPassword';
-import PromptPassword from '@/components/pages/PromptPassword';
+import { clearUser, setUser } from "@/store/userSlice";
 import Layout from "@/components/organisms/Layout";
-import Dashboard from "@/components/pages/Dashboard";
+import Signup from "@/components/pages/Signup";
+import Callback from "@/components/pages/Callback";
 import TestCases from "@/components/pages/TestCases";
+import ResetPassword from "@/components/pages/ResetPassword";
 import Bugs from "@/components/pages/Bugs";
+import ErrorPage from "@/components/pages/ErrorPage";
+import Dashboard from "@/components/pages/Dashboard";
+import Login from "@/components/pages/Login";
 import Projects from "@/components/pages/Projects";
-
+import PromptPassword from "@/components/pages/PromptPassword";
+import TestCaseDetails from "@/components/pages/TestCaseDetails";
 export const AuthContext = createContext(null);
 
 function App() {
@@ -113,9 +113,10 @@ function App() {
         <Route path="/error" element={<ErrorPage />} />
         <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
         <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
-        <Route path="/" element={<Layout />}>
+<Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="test-cases" element={<TestCases />} />
+          <Route path="test-cases/:id" element={<TestCaseDetails />} />
           <Route path="bugs" element={<Bugs />} />
           <Route path="projects" element={<Projects />} />
         </Route>

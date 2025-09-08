@@ -6,13 +6,13 @@ import SearchBar from "@/components/molecules/SearchBar";
 import FilterDropdown from "@/components/molecules/FilterDropdown";
 import TestCaseCard from "@/components/organisms/TestCaseCard";
 import TestCaseModal from "@/components/organisms/TestCaseModal";
+import TestCaseDetails from "@/components/pages/TestCaseDetails";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import useTestCases from "@/hooks/useTestCases";
 import useProjects from "@/hooks/useProjects";
 import ApperIcon from "@/components/ApperIcon";
-
 const TestCases = () => {
   const { testCases, loading, error, createTestCase, updateTestCase, deleteTestCase, runTestCase, refetch } = useTestCases();
   const { projects } = useProjects();

@@ -6,8 +6,10 @@ import Button from "@/components/atoms/Button";
 import StatusBadge from "@/components/molecules/StatusBadge";
 import PriorityIndicator from "@/components/molecules/PriorityIndicator";
 import ApperIcon from "@/components/ApperIcon";
-
+import { useNavigate } from "react-router-dom";
 const TestCaseCard = ({ testCase, onEdit, onDelete, onRun }) => {
+  const navigate = useNavigate();
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -56,8 +58,17 @@ const TestCaseCard = ({ testCase, onEdit, onDelete, onRun }) => {
           )}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+<div className="flex items-center justify-between pt-4 border-t border-gray-200">
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(`/test-cases/${testCase.Id}`)}
+              className="inline-flex items-center gap-2"
+            >
+              <ApperIcon name="MessageCircle" className="w-4 h-4" />
+              Comments
+            </Button>
             <Button
               variant="outline"
               size="sm"

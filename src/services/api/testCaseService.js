@@ -356,5 +356,16 @@ export const testCaseService = {
       }
       throw error;
     }
+},
+
+  async getComments(testCaseId) {
+    try {
+      // This method could be used for quick comment counts or previews
+      // For now, comments are handled by the commentService
+      return [];
+    } catch (error) {
+      console.error("Error fetching test case comments:", error);
+      return [];
+    }
   }
 };
