@@ -358,11 +358,12 @@ export const testCaseService = {
     }
 },
 
-  async getComments(testCaseId) {
+async getComments(testCaseId) {
     try {
       // This method could be used for quick comment counts or previews
       // For now, comments are handled by the commentService
-      return [];
+      const comments = [];
+      return comments;
     } catch (error) {
       console.error("Error fetching test case comments:", error);
       return [];
