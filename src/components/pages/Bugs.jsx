@@ -41,11 +41,11 @@ const Bugs = () => {
     { value: "low", label: "Low" }
   ];
 
-  const filteredBugs = bugs.filter(bug => {
-    const matchesSearch = bug.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         bug.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || bug.status === statusFilter;
-    const matchesSeverity = severityFilter === "all" || bug.severity === severityFilter;
+const filteredBugs = bugs.filter(bug => {
+    const matchesSearch = (bug.title_c || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (bug.description_c || "").toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || bug.status_c === statusFilter;
+    const matchesSeverity = severityFilter === "all" || bug.severity_c === severityFilter;
     
     return matchesSearch && matchesStatus && matchesSeverity;
   });

@@ -24,15 +24,15 @@ const Projects = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
 
-  const filteredProjects = projects.filter(project =>
-    project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.description.toLowerCase().includes(searchTerm.toLowerCase())
+const filteredProjects = projects.filter(project =>
+    (project.name_c || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (project.description_c || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getProjectStats = (projectId) => {
-    const projectBugs = bugs.filter(b => b.projectId === projectId.toString());
-    const projectTestCases = testCases.filter(tc => tc.projectId === projectId.toString());
-    const openBugs = projectBugs.filter(b => !["resolved", "closed"].includes(b.status)).length;
+const projectBugs = bugs.filter(b => b.project_id_c === parseInt(projectId));
+    const projectTestCases = testCases.filter(tc => tc.project_id_c === parseInt(projectId));
+    const openBugs = projectBugs.filter(b => !["resolved", "closed"].includes(b.status_c)).length;
     
     return {
       totalBugs: projectBugs.length,
@@ -125,17 +125,17 @@ const Projects = () => {
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900 mb-2">
-                          {project.name}
+{project.name_c || project.Name}
                         </h3>
                         <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                          {project.description}
+                          {project.description_c}
                         </p>
                       </div>
                       <Badge 
-                        variant={project.status === "active" ? "success" : "default"}
+                        variant={project.status_c === "active" ? "success" : "default"}
                         className="ml-2"
                       >
-                        {project.status}
+                        {project.status_c}
                       </Badge>
                     </div>
 
@@ -169,8 +169,8 @@ const Projects = () => {
                       
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-500">Created:</span>
-                        <span className="text-gray-900">
-                          {format(new Date(project.createdAt), "MMM d, yyyy")}
+<span className="text-gray-900">
+                          {format(new Date(project.created_at_c || project.CreatedOn), "MMM d, yyyy")}
                         </span>
                       </div>
                     </div>

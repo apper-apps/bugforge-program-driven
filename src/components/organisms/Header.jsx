@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useSelector } from "react-redux";
 import Button from "@/components/atoms/Button";
 import SearchBar from "@/components/molecules/SearchBar";
 import ApperIcon from "@/components/ApperIcon";
+import { AuthContext } from "../../App";
 
 const Header = ({ title, onMenuClick, searchValue, onSearchChange, onSearchClear, actions }) => {
+  const { logout } = useContext(AuthContext);
+  const { user } = useSelector((state) => state.user);
+
   return (
     <header className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
       <div className="flex items-center justify-between">
@@ -37,6 +42,23 @@ const Header = ({ title, onMenuClick, searchValue, onSearchChange, onSearchClear
               {actions}
             </div>
           )}
+
+          <div className="flex items-center gap-3">
+            {user && (
+              <span className="text-sm text-gray-600 hidden sm:inline">
+                {user.firstName} {user.lastName}
+              </span>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={logout}
+              className="inline-flex items-center gap-2"
+            >
+              <ApperIcon name="LogOut" className="w-4 h-4" />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
+          </div>
         </div>
       </div>
 

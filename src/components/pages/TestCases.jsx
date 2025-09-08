@@ -40,11 +40,11 @@ const TestCases = () => {
     { value: "low", label: "Low" }
   ];
 
-  const filteredTestCases = testCases.filter(testCase => {
-    const matchesSearch = testCase.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         testCase.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || testCase.status === statusFilter;
-    const matchesPriority = priorityFilter === "all" || testCase.priority === priorityFilter;
+const filteredTestCases = testCases.filter(testCase => {
+    const matchesSearch = (testCase.title_c || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (testCase.description_c || "").toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || testCase.status_c === statusFilter;
+    const matchesPriority = priorityFilter === "all" || testCase.priority_c === priorityFilter;
     
     return matchesSearch && matchesStatus && matchesPriority;
   });

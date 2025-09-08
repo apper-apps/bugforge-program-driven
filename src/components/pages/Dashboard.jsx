@@ -23,33 +23,33 @@ const Dashboard = () => {
         testCaseService.getAll()
       ]);
 
-      const openBugs = bugs.filter(b => !["resolved", "closed"].includes(b.status)).length;
-      const passedTests = testCases.filter(tc => tc.lastResult === "pass").length;
-      const totalRunTests = testCases.filter(tc => tc.lastResult).length;
+const openBugs = bugs.filter(b => !["resolved", "closed"].includes(b.status_c)).length;
+      const passedTests = testCases.filter(tc => tc.last_result_c === "pass").length;
+      const totalRunTests = testCases.filter(tc => tc.last_result_c).length;
       const passRate = totalRunTests > 0 ? Math.round((passedTests / totalRunTests) * 100) : 0;
 
-      const severityData = {
-        critical: bugs.filter(b => b.severity === "critical").length,
-        high: bugs.filter(b => b.severity === "high").length,
-        medium: bugs.filter(b => b.severity === "medium").length,
-        low: bugs.filter(b => b.severity === "low").length
+const severityData = {
+        critical: bugs.filter(b => b.severity_c === "critical").length,
+        high: bugs.filter(b => b.severity_c === "high").length,
+        medium: bugs.filter(b => b.severity_c === "medium").length,
+        low: bugs.filter(b => b.severity_c === "low").length
       };
 
       const statusData = {
-        new: bugs.filter(b => b.status === "new").length,
-        assigned: bugs.filter(b => b.status === "assigned").length,
-        "in-progress": bugs.filter(b => b.status === "in-progress").length,
-        testing: bugs.filter(b => b.status === "testing").length,
-        resolved: bugs.filter(b => b.status === "resolved").length,
-        closed: bugs.filter(b => b.status === "closed").length
+        new: bugs.filter(b => b.status_c === "new").length,
+        assigned: bugs.filter(b => b.status_c === "assigned").length,
+        "in-progress": bugs.filter(b => b.status_c === "in-progress").length,
+        testing: bugs.filter(b => b.status_c === "testing").length,
+        resolved: bugs.filter(b => b.status_c === "resolved").length,
+        closed: bugs.filter(b => b.status_c === "closed").length
       };
 
       const testResultData = {
-        pass: testCases.filter(tc => tc.lastResult === "pass").length,
-        fail: testCases.filter(tc => tc.lastResult === "fail").length,
-        blocked: testCases.filter(tc => tc.lastResult === "blocked").length,
-        skip: testCases.filter(tc => tc.lastResult === "skip").length,
-        "not-run": testCases.filter(tc => !tc.lastResult).length
+        pass: testCases.filter(tc => tc.last_result_c === "pass").length,
+        fail: testCases.filter(tc => tc.last_result_c === "fail").length,
+        blocked: testCases.filter(tc => tc.last_result_c === "blocked").length,
+        skip: testCases.filter(tc => tc.last_result_c === "skip").length,
+        "not-run": testCases.filter(tc => !tc.last_result_c).length
       };
 
       setData({
