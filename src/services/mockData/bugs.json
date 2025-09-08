@@ -1,0 +1,128 @@
+[
+  {
+    "Id": 1,
+    "projectId": "1",
+    "title": "Login button remains disabled after valid input",
+    "description": "The login button stays disabled even when both email and password fields contain valid data. This prevents users from logging in.",
+    "severity": "high",
+    "priority": "high",
+    "status": "assigned",
+    "assignee": "John Smith",
+    "reporter": "Sarah Johnson",
+    "reproductionSteps": [
+      "Navigate to login page",
+      "Enter valid email address",
+      "Enter valid password",
+      "Observe login button remains disabled"
+    ],
+    "attachments": [
+      "login-bug-screenshot.png",
+      "console-errors.log"
+    ],
+    "createdAt": "2024-03-16T10:30:00Z",
+    "updatedAt": "2024-03-16T14:15:00Z"
+  },
+  {
+    "Id": 2,
+    "projectId": "1",
+    "title": "Shopping cart total calculation incorrect",
+    "description": "Cart total shows wrong amount when items have different tax rates",
+    "severity": "critical",
+    "priority": "critical",
+    "status": "in-progress",
+    "assignee": "Mike Chen",
+    "reporter": "Lisa Wong",
+    "reproductionSteps": [
+      "Add multiple items to cart",
+      "Include items with different tax rates",
+      "Check cart total calculation"
+    ],
+    "attachments": [
+      "cart-calculation-error.png"
+    ],
+    "createdAt": "2024-03-15T09:20:00Z",
+    "updatedAt": "2024-03-16T11:45:00Z"
+  },
+  {
+    "Id": 3,
+    "projectId": "2",
+    "title": "App crashes when viewing transaction history",
+    "description": "Mobile app crashes when user tries to view transaction history for accounts with more than 100 transactions",
+    "severity": "critical",
+    "priority": "high",
+    "status": "new",
+    "assignee": null,
+    "reporter": "David Kim",
+    "reproductionSteps": [
+      "Login to mobile app",
+      "Navigate to account with 100+ transactions",
+      "Tap 'View History'",
+      "App crashes immediately"
+    ],
+    "attachments": [
+      "crash-log.txt",
+      "device-specs.json"
+    ],
+    "createdAt": "2024-03-16T16:20:00Z",
+    "updatedAt": "2024-03-16T16:20:00Z"
+  },
+  {
+    "Id": 4,
+    "projectId": "1",
+    "title": "Search results not properly filtered by category",
+    "description": "Product search returns items from all categories despite category filter selection",
+    "severity": "medium",
+    "priority": "medium",
+    "status": "testing",
+    "assignee": "Emma Davis",
+    "reporter": "Tom Wilson",
+    "reproductionSteps": [
+      "Go to product search page",
+      "Select specific category filter",
+      "Enter search term",
+      "Results include items from other categories"
+    ],
+    "attachments": [],
+    "createdAt": "2024-03-14T13:45:00Z",
+    "updatedAt": "2024-03-16T09:30:00Z"
+  },
+  {
+    "Id": 5,
+    "projectId": "4",
+    "title": "API Gateway timeout not configurable",
+    "description": "API Gateway uses hardcoded timeout values that cannot be configured per endpoint",
+    "severity": "low",
+    "priority": "low",
+    "status": "resolved",
+    "assignee": "Alex Rodriguez",
+    "reporter": "Jennifer Lee",
+    "reproductionSteps": [
+      "Check API Gateway configuration",
+      "Attempt to modify timeout settings",
+      "Settings are not available"
+    ],
+    "attachments": [
+      "config-screenshot.png"
+    ],
+    "createdAt": "2024-03-10T11:15:00Z",
+    "updatedAt": "2024-03-15T17:20:00Z"
+  },
+  {
+    "Id": 6,
+    "projectId": "2",
+    "title": "Balance display formatting incorrect for large amounts",
+    "description": "Account balances over $1M display without proper comma formatting",
+    "severity": "low",
+    "priority": "medium",
+    "status": "closed",
+    "assignee": "Rachel Green",
+    "reporter": "Mark Thompson",
+    "reproductionSteps": [
+      "View account with balance > $1,000,000",
+      "Balance shows as 1000000.00 instead of 1,000,000.00"
+    ],
+    "attachments": [],
+    "createdAt": "2024-03-08T14:30:00Z",
+    "updatedAt": "2024-03-14T10:45:00Z"
+  }
+]

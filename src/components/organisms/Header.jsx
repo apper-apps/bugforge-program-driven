@@ -1,0 +1,57 @@
+import React from "react";
+import Button from "@/components/atoms/Button";
+import SearchBar from "@/components/molecules/SearchBar";
+import ApperIcon from "@/components/ApperIcon";
+
+const Header = ({ title, onMenuClick, searchValue, onSearchChange, onSearchClear, actions }) => {
+  return (
+    <header className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onMenuClick}
+            className="lg:hidden"
+          >
+            <ApperIcon name="Menu" className="w-5 h-5" />
+          </Button>
+          <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {(searchValue !== undefined || onSearchChange) && (
+            <div className="hidden sm:block">
+              <SearchBar
+                value={searchValue || ""}
+                onChange={onSearchChange}
+                onClear={onSearchClear}
+                placeholder="Search..."
+                className="w-80"
+              />
+            </div>
+          )}
+          
+          {actions && (
+            <div className="flex items-center gap-2">
+              {actions}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {(searchValue !== undefined || onSearchChange) && (
+        <div className="sm:hidden mt-4">
+          <SearchBar
+            value={searchValue || ""}
+            onChange={onSearchChange}
+            onClear={onSearchClear}
+            placeholder="Search..."
+          />
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Header;
