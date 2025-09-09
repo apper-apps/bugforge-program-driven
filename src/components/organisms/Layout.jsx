@@ -8,18 +8,20 @@ const Layout = () => {
   const location = useLocation();
 
   const getPageTitle = () => {
-    switch (location.pathname) {
-      case "/":
-        return "Dashboard";
-      case "/test-cases":
-        return "Test Cases";
-      case "/bugs":
-        return "Bugs";
-      case "/projects":
-        return "Projects";
-      default:
-        return "BugForge";
-    }
+switch (location.pathname) {
+case "/":
+return "Dashboard";
+case "/test-cases":
+return "Test Cases";
+case "/bugs":
+return "Bugs";
+case "/projects":
+return "Projects";
+case "/team-members":
+return "Team Members";
+default:
+return "BugForge";
+}
   };
 
   return (

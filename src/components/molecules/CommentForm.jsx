@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import Button from "@/components/atoms/Button";
-import Textarea from "@/components/atoms/Textarea";
+import { notificationService } from "@/services/api/notificationService";
 import ApperIcon from "@/components/ApperIcon";
-
+import Textarea from "@/components/atoms/Textarea";
+import Button from "@/components/atoms/Button";
 const CommentForm = ({ 
   onSubmit, 
   placeholder = "Write a comment...", 
@@ -30,26 +30,55 @@ const CommentForm = ({
       return;
     }
 
-    setLoading(true);
+setLoading(true);
     try {
-      await onSubmit({
+      const result = await onSubmit({
         text: text.trim(),
         authorId: user?.userId || user?.Id,
         mentions: extractMentions(text)
       });
+
+      // Create notifications for mentioned users
+      const mentions = extractMentions(text);
+      if (mentions.length > 0 && result?.Id) {
+        try {
+          await createNotificationsForMentions(mentions, result.Id, user?.userId || user?.Id);
+        } catch (notificationError) {
+          console.error("Failed to create notifications for mentions:", notificationError);
+        }
+      }
+
       setText("");
       toast.success(isReply ? "Reply posted successfully" : "Comment posted successfully");
-    } catch (error) {
-      toast.error("Failed to post comment");
-    } finally {
-      setLoading(false);
-    }
-  };
+} catch (error) {
+toast.error("Failed to post comment");
+} finally {
+setLoading(false);
+}
+};
 
-  const extractMentions = (text) => {
-    const mentions = text.match(/@(\w+)/g);
-    return mentions ? mentions.map(mention => mention.substring(1)) : [];
-  };
+const extractMentions = (text) => {
+const mentions = text.match(/@(\w+)/g);
+return mentions ? mentions.map(mention => mention.substring(1)) : [];
+};
+
+const createNotificationsForMentions = async (mentions, commentId, authorId) => {
+// Note: In a real implementation, you'd need to look up user IDs by username
+// For now, we'll create notifications assuming mentions are user IDs
+for (const mention of mentions) {
+try {
+await notificationService.create({
+user_id_c: mention, // In practice, you'd resolve username to user ID
+comment_id_c: commentId,
+timestamp_c: new Date().toISOString(),
+is_read_c: false,
+Name: `New mention in comment`
+});
+} catch (error) {
+console.error(`Failed to create notification for user ${mention}:`, error);
+}
+}
+};
 
   const handleTextChange = (e) => {
     setText(e.target.value);

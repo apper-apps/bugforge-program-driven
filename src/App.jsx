@@ -15,6 +15,7 @@ import Login from "@/components/pages/Login";
 import Projects from "@/components/pages/Projects";
 import PromptPassword from "@/components/pages/PromptPassword";
 import TestCaseDetails from "@/components/pages/TestCaseDetails";
+import TeamMembers from "@/components/pages/TeamMembers";
 export const AuthContext = createContext(null);
 
 function App() {
@@ -106,20 +107,21 @@ function App() {
   
   return (
     <AuthContext.Provider value={authMethods}>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/callback" element={<Callback />} />
-        <Route path="/error" element={<ErrorPage />} />
-        <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
-        <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
+<Routes>
+<Route path="/login" element={<Login />} />
+<Route path="/signup" element={<Signup />} />
+<Route path="/callback" element={<Callback />} />
+<Route path="/error" element={<ErrorPage />} />
+<Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
+<Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
 <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="test-cases" element={<TestCases />} />
-          <Route path="test-cases/:id" element={<TestCaseDetails />} />
-          <Route path="bugs" element={<Bugs />} />
-          <Route path="projects" element={<Projects />} />
-        </Route>
+<Route index element={<Dashboard />} />
+<Route path="test-cases" element={<TestCases />} />
+<Route path="test-cases/:id" element={<TestCaseDetails />} />
+<Route path="bugs" element={<Bugs />} />
+<Route path="projects" element={<Projects />} />
+<Route path="team-members" element={<TeamMembers />} />
+</Route>
       </Routes>
       
       <ToastContainer

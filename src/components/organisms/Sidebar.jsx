@@ -7,12 +7,13 @@ import ApperIcon from "@/components/ApperIcon";
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
 
-  const navigation = [
-    { name: "Dashboard", href: "/", icon: "BarChart3" },
-    { name: "Test Cases", href: "/test-cases", icon: "FileText" },
-    { name: "Bugs", href: "/bugs", icon: "Bug" },
-    { name: "Projects", href: "/projects", icon: "FolderOpen" },
-  ];
+const navigation = [
+{ name: "Dashboard", href: "/", icon: "BarChart3" },
+{ name: "Test Cases", href: "/test-cases", icon: "FileText" },
+{ name: "Bugs", href: "/bugs", icon: "Bug" },
+{ name: "Projects", href: "/projects", icon: "FolderOpen" },
+{ name: "Team Members", href: "/team-members", icon: "Users" },
+];
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">

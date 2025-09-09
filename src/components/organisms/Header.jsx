@@ -1,10 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Button from "@/components/atoms/Button";
-import SearchBar from "@/components/molecules/SearchBar";
-import ApperIcon from "@/components/ApperIcon";
 import { AuthContext } from "../../App";
-
+import { notificationService } from "@/services/api/notificationService";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import SearchBar from "@/components/molecules/SearchBar";
+import Button from "@/components/atoms/Button";
+import NotificationBell from "@/components/molecules/NotificationBell";
 const Header = ({ title, onMenuClick, searchValue, onSearchChange, onSearchClear, actions }) => {
   const { logout } = useContext(AuthContext);
   const { user } = useSelector((state) => state.user);
@@ -24,26 +26,28 @@ const Header = ({ title, onMenuClick, searchValue, onSearchChange, onSearchClear
           <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
         </div>
 
-        <div className="flex items-center gap-4">
-          {(searchValue !== undefined || onSearchChange) && (
-            <div className="hidden sm:block">
-              <SearchBar
-                value={searchValue || ""}
-                onChange={onSearchChange}
-                onClear={onSearchClear}
-                placeholder="Search..."
-                className="w-80"
-              />
-            </div>
-          )}
-          
-          {actions && (
-            <div className="flex items-center gap-2">
-              {actions}
-            </div>
-          )}
+<div className="flex items-center gap-4">
+{(searchValue !== undefined || onSearchChange) && (
+<div className="hidden sm:block">
+<SearchBar
+value={searchValue || ""}
+onChange={onSearchChange}
+onClear={onSearchClear}
+placeholder="Search..."
+className="w-80"
+/>
+</div>
+)}
 
-          <div className="flex items-center gap-3">
+{actions && (
+<div className="flex items-center gap-2">
+{actions}
+</div>
+)}
+
+<NotificationBell />
+
+<div className="flex items-center gap-3">
             {user && (
               <span className="text-sm text-gray-600 hidden sm:inline">
                 {user.firstName} {user.lastName}
