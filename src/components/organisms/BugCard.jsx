@@ -75,8 +75,10 @@ const toggleTimeline = () => {
           )}
           <div className="flex items-center justify-between">
             <span className="text-gray-500">Created:</span>
-            <span className="text-gray-900">
-              {format(new Date(bug.createdAt), "MMM d, yyyy")}
+<span className="text-gray-900">
+              {bug.createdAt && !isNaN(new Date(bug.createdAt)) 
+                ? format(new Date(bug.createdAt), "MMM d, yyyy")
+                : "Invalid date"}
             </span>
           </div>
           {bug.attachments?.length > 0 && (

@@ -6,28 +6,33 @@ import ApperIcon from '@/components/ApperIcon';
 import { cn } from '@/utils/cn';
 
 const BugTimeline = ({ bug, isOpen, onClose, className }) => {
-  const timelineItems = useMemo(() => {
+const timelineItems = useMemo(() => {
     if (!bug) return [];
     
     const items = [];
     
-    // Bug creation event
-    items.push({
-      id: 'created',
-      type: 'created',
-      title: 'Bug Report Created',
-      description: `"${bug.title}" was reported`,
-      timestamp: bug.createdAt,
-      user: bug.reporter,
-      details: {
-        severity: bug.severity,
-        priority: bug.priority,
-        project: `Project ID: ${bug.projectId}`
-      }
-    });
+    // Bug creation event - only add if createdAt is valid
+    if (bug.createdAt && !isNaN(new Date(bug.createdAt))) {
+      items.push({
+        id: 'created',
+        type: 'created',
+        title: 'Bug Report Created',
+        description: `"${bug.title}" was reported`,
+        timestamp: bug.createdAt,
+        user: bug.reporter,
+        details: {
+          severity: bug.severity,
+          priority: bug.priority,
+          project: `Project ID: ${bug.projectId}`
+        }
+      });
+    }
     
-    // Initial assignment if exists
-    if (bug.assignee && bug.createdAt !== bug.updatedAt) {
+    // Initial assignment if exists - validate both dates
+    if (bug.assignee && 
+        bug.createdAt && !isNaN(new Date(bug.createdAt)) &&
+        bug.updatedAt && !isNaN(new Date(bug.updatedAt)) &&
+        bug.createdAt !== bug.updatedAt) {
       items.push({
         id: 'assigned',
         type: 'assigned', 
@@ -41,8 +46,11 @@ const BugTimeline = ({ bug, isOpen, onClose, className }) => {
       });
     }
     
-    // Status changes (inferred from current status if updated)
-    if (bug.status !== 'new' && bug.createdAt !== bug.updatedAt) {
+    // Status changes (inferred from current status if updated) - validate dates
+    if (bug.status !== 'new' && 
+        bug.createdAt && !isNaN(new Date(bug.createdAt)) &&
+        bug.updatedAt && !isNaN(new Date(bug.updatedAt)) &&
+        bug.createdAt !== bug.updatedAt) {
       items.push({
         id: 'status_change',
         type: 'status_change',
@@ -60,15 +68,20 @@ const BugTimeline = ({ bug, isOpen, onClose, className }) => {
     // Add timeline entries from bug.timeline if they exist
     if (bug.timeline && Array.isArray(bug.timeline)) {
       bug.timeline.forEach((entry, index) => {
-        items.push({
-          id: `timeline_${index}`,
-          ...entry
-        });
+        // Only add entries with valid timestamps
+        if (entry.timestamp && !isNaN(new Date(entry.timestamp))) {
+          items.push({
+            id: `timeline_${index}`,
+            ...entry
+          });
+        }
       });
     }
     
-    // Sort by timestamp
-    return items.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    // Sort by timestamp - filter out invalid dates before sorting
+    return items
+      .filter(item => item.timestamp && !isNaN(new Date(item.timestamp)))
+      .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
   }, [bug]);
 
   if (!bug) return null;
