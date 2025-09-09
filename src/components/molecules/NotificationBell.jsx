@@ -20,7 +20,7 @@ const NotificationBell = () => {
       
       setLoading(true);
       try {
-        const userNotifications = await notificationService.getNotificationsByUser(user.userId);
+const userNotifications = await notificationService.getByUserId(user.userId);
         setNotifications(userNotifications || []);
         setUnreadCount(userNotifications?.filter(n => !n.is_read_c).length || 0);
         setError(null);
