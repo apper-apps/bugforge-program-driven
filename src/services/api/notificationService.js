@@ -149,11 +149,11 @@ const notificationService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
-      const params = {
+const params = {
         records: [
           {
             Name: notificationData.Name,
-            user_id_c: notificationData.user_id_c,
+            user_id_c: parseInt(notificationData.user_id_c),
             comment_id_c: parseInt(notificationData.comment_id_c),
             timestamp_c: notificationData.timestamp_c,
             is_read_c: notificationData.is_read_c
@@ -184,8 +184,28 @@ const notificationService = {
       } else {
         console.error(error);
       }
-      throw error;
+      return null;
     }
+  },
+
+  async createForMention(userId, commentId, mentionedBy) {
+    return await this.create({
+      Name: `You were mentioned in a comment by ${mentionedBy}`,
+      user_id_c: userId,
+      comment_id_c: commentId,
+      timestamp_c: new Date().toISOString(),
+      is_read_c: false
+    });
+  },
+
+  async createForAssignment(userId, itemType, itemTitle, assignedBy) {
+    return await this.create({
+      Name: `You were assigned to ${itemType}: ${itemTitle} by ${assignedBy}`,
+      user_id_c: userId,
+      comment_id_c: null,
+      timestamp_c: new Date().toISOString(),
+      is_read_c: false
+});
   },
 
   async markAsRead(id) {

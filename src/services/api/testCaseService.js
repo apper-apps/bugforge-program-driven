@@ -1,4 +1,6 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import React from "react";
+import Error from "@/components/ui/Error";
 
 const tableName = 'test_case_c';
 
@@ -144,7 +146,7 @@ export const testCaseService = {
     }
   },
 
-  async create(testCaseData) {
+async create(testCaseData) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -190,7 +192,14 @@ export const testCaseService = {
           });
         }
 
-        return successfulRecords.length > 0 ? successfulRecords[0].data : null;
+        const createdTestCase = successfulRecords.length > 0 ? successfulRecords[0].data : null;
+        
+        // Log activity for test case creation
+        if (createdTestCase) {
+          await this.logActivity('System', 'Test Case Created', `Created test case: ${testCaseData.title}`);
+        }
+
+        return createdTestCase;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -202,7 +211,7 @@ export const testCaseService = {
     }
   },
 
-  async update(id, testCaseData) {
+async update(id, testCaseData) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -249,7 +258,14 @@ export const testCaseService = {
           });
         }
 
-        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+        const updatedTestCase = successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+        
+        // Log activity for test case update
+        if (updatedTestCase) {
+          await this.logActivity('System', 'Test Case Updated', `Updated test case: ${testCaseData.title}`);
+        }
+
+        return updatedTestCase;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -261,7 +277,7 @@ export const testCaseService = {
     }
   },
 
-  async updateResult(id, result) {
+async updateResult(id, result) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -302,7 +318,14 @@ export const testCaseService = {
           });
         }
 
-        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+        const updatedTestCase = successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+        
+        // Log activity for test case result update
+        if (updatedTestCase) {
+          await this.logActivity('System', 'Test Result Updated', `Test case result updated to: ${result}`);
+        }
+
+        return updatedTestCase;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -314,7 +337,7 @@ export const testCaseService = {
     }
   },
 
-  async delete(id) {
+async delete(id) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -346,7 +369,14 @@ export const testCaseService = {
           });
         }
 
-        return successfulDeletions.length > 0;
+        const success = successfulDeletions.length > 0;
+        
+        // Log activity for test case deletion
+        if (success) {
+          await this.logActivity('System', 'Test Case Deleted', `Test case with ID: ${id} was deleted`);
+        }
+
+        return success;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -356,9 +386,23 @@ export const testCaseService = {
       }
       throw error;
     }
-},
+  },
 
-async getComments(testCaseId) {
+  async logActivity(userId, actionType, details) {
+    try {
+      const { activityLogService } = await import('./activityLogService');
+      await activityLogService.create({
+        user_id_c: userId,
+        action_type_c: actionType,
+        details_c: details,
+        timestamp_c: new Date().toISOString()
+      });
+} catch (error) {
+      console.error('Failed to log activity:', error);
+    }
+  },
+
+  async getComments(testCaseId) {
     try {
       // This method could be used for quick comment counts or previews
       // For now, comments are handled by the commentService

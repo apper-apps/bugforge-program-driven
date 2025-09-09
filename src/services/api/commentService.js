@@ -56,7 +56,7 @@ export const commentService = {
     }
   },
 
-  async create(commentData) {
+async create(commentData) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -98,7 +98,14 @@ export const commentService = {
           });
         }
 
-        return successfulRecords.length > 0 ? successfulRecords[0].data : null;
+        const createdComment = successfulRecords.length > 0 ? successfulRecords[0].data : null;
+        
+        // Create notifications for mentions in comment text
+        if (createdComment && commentData.text) {
+          await this.processMentions(commentData.text, createdComment.Id, commentData.authorId);
+        }
+
+        return createdComment;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -107,6 +114,31 @@ export const commentService = {
         console.error(error);
       }
       throw error;
+    }
+  },
+
+  async processMentions(text, commentId, authorId) {
+    // Simple mention detection - looks for @username patterns
+    const mentionPattern = /@(\w+)/g;
+    const mentions = [...text.matchAll(mentionPattern)];
+    
+    if (mentions.length > 0) {
+      const { notificationService } = await import('./notificationService');
+      
+      for (const mention of mentions) {
+        const username = mention[1];
+        // In a real implementation, you would lookup the user ID by username
+        // For now, we'll create a notification with a placeholder
+        try {
+          await notificationService.createForMention(
+            authorId, // Placeholder - should be actual mentioned user ID
+            commentId,
+            'User' // Placeholder - should be actual author name
+          );
+        } catch (error) {
+          console.error('Failed to create mention notification:', error);
+        }
+      }
     }
   },
 

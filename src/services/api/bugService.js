@@ -156,7 +156,7 @@ export const bugService = {
     }
   },
 
-  async create(bugData) {
+async create(bugData) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -207,7 +207,19 @@ export const bugService = {
           });
         }
 
-        return successfulRecords.length > 0 ? successfulRecords[0].data : null;
+        const createdBug = successfulRecords.length > 0 ? successfulRecords[0].data : null;
+        
+        // Log activity for bug creation
+        if (createdBug) {
+          await this.logActivity(bugData.reporter || 'Unknown', 'Bug Created', `Created bug: ${bugData.title}`);
+          
+          // Create notification for assignee if assigned
+          if (bugData.assignee) {
+            await this.createAssignmentNotification(bugData.assignee, createdBug.Id, bugData.title, bugData.reporter);
+          }
+        }
+
+        return createdBug;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -219,7 +231,7 @@ export const bugService = {
     }
   },
 
-  async update(id, bugData) {
+async update(id, bugData) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -270,7 +282,14 @@ export const bugService = {
           });
         }
 
-        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+        const updatedBug = successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+        
+        // Log activity for bug update
+        if (updatedBug) {
+          await this.logActivity(bugData.reporter || 'Unknown', 'Bug Updated', `Updated bug: ${bugData.title}`);
+        }
+
+        return updatedBug;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -282,7 +301,7 @@ export const bugService = {
     }
   },
 
-  async updateStatus(id, status) {
+async updateStatus(id, status) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -323,7 +342,14 @@ export const bugService = {
           });
         }
 
-        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+        const updatedBug = successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+        
+        // Log activity for status change
+        if (updatedBug) {
+          await this.logActivity('System', 'Status Changed', `Bug status changed to: ${status}`);
+        }
+
+        return updatedBug;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -335,7 +361,7 @@ export const bugService = {
     }
   },
 
-  async delete(id) {
+async delete(id) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -367,7 +393,14 @@ export const bugService = {
           });
         }
 
-        return successfulDeletions.length > 0;
+        const success = successfulDeletions.length > 0;
+        
+        // Log activity for bug deletion
+        if (success) {
+          await this.logActivity('System', 'Bug Deleted', `Bug with ID: ${id} was deleted`);
+        }
+
+        return success;
       }
     } catch (error) {
       if (error?.response?.data?.message) {
@@ -376,6 +409,34 @@ export const bugService = {
         console.error(error);
       }
       throw error;
+    }
+  },
+
+  async logActivity(userId, actionType, details) {
+    try {
+      const { activityLogService } = await import('./activityLogService');
+      await activityLogService.create({
+        user_id_c: userId,
+        action_type_c: actionType,
+        details_c: details,
+        timestamp_c: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Failed to log activity:', error);
+    }
+  },
+
+  async createAssignmentNotification(assigneeId, bugId, bugTitle, assignedBy) {
+    try {
+      const { notificationService } = await import('./notificationService');
+      await notificationService.createForAssignment(
+        assigneeId,
+        'bug',
+        bugTitle,
+        assignedBy || 'System'
+      );
+    } catch (error) {
+      console.error('Failed to create assignment notification:', error);
     }
   }
 };
