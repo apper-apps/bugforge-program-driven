@@ -16,6 +16,7 @@ import { projectService } from "@/services/api/projectService";
 const TeamMembers = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -27,23 +28,38 @@ const TeamMembers = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProject, setSelectedProject] = useState("");
-  
   const user = useSelector((state) => state.user?.user);
 
   useEffect(() => {
     loadData();
   }, []);
 
-  const loadData = async () => {
+const loadData = async () => {
     try {
       setLoading(true);
       setError("");
-      const [membersData, projectsData] = await Promise.all([
+      
+      // Fetch available users - in production this would come from authentication system
+      const fetchUsers = async () => {
+        // Placeholder for user fetching - would typically use ApperClient to get system users
+        // This would integrate with the authentication system's user management
+        return [
+          { Id: 1, Name: "John Doe" },
+          { Id: 2, Name: "Jane Smith" },
+          { Id: 3, Name: "Mike Johnson" },
+          { Id: 4, Name: "Sarah Wilson" }
+        ];
+      };
+      
+      const [membersData, projectsData, usersData] = await Promise.all([
         teamMemberService.getAll(),
-        projectService.getAll()
+        projectService.getAll(),
+        fetchUsers()
       ]);
+      
       setTeamMembers(membersData || []);
       setProjects(projectsData || []);
+      setUsers(usersData || []);
     } catch (err) {
       setError(err.message || "Failed to load data");
     } finally {
@@ -88,8 +104,8 @@ const TeamMembers = () => {
   const handleEdit = (member) => {
     setEditingMember(member);
     setFormData({
-      Name: member.Name || "",
-      user_id_c: member.user_id_c?.Name || member.user_id_c || "",
+Name: member.Name || "",
+      user_id_c: member.user_id_c?.Id || member.user_id_c || "",
       project_id_c: member.project_id_c?.Id || member.project_id_c || ""
     });
     setShowAddModal(true);
@@ -258,16 +274,22 @@ const TeamMembers = () => {
                 />
               </div>
 
-              <div>
+<div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  User ID
+                  User
                 </label>
-                <Input
+                <Select
                   value={formData.user_id_c}
                   onChange={(e) => setFormData(prev => ({ ...prev, user_id_c: e.target.value }))}
-                  placeholder="User identifier"
                   required
-                />
+                >
+                  <option value="">Select a user</option>
+                  {users.map(user => (
+                    <option key={user.Id} value={user.Id}>
+                      {user.Name}
+                    </option>
+                  ))}
+                </Select>
               </div>
 
               <div>
