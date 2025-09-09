@@ -10,7 +10,7 @@ import ApperIcon from "@/components/ApperIcon";
 import { commentService } from "@/services/api/commentService";
 import { replyService } from "@/services/api/replyService";
 
-const CommentsSection = ({ testCaseId }) => {
+const CommentsSection = ({ testCaseId, bugId }) => {
   const [comments, setComments] = useState([]);
   const [replies, setReplies] = useState({});
   const [loading, setLoading] = useState(true);
@@ -22,13 +22,15 @@ const CommentsSection = ({ testCaseId }) => {
   const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    loadComments();
-  }, [testCaseId]);
+loadComments();
+  }, [testCaseId, bugId]);
 
   const loadComments = async () => {
     setLoading(true);
     try {
-      const data = await commentService.getByTestCase(testCaseId);
+const data = testCaseId 
+        ? await commentService.getByTestCase(testCaseId)
+        : await commentService.getByBug(bugId);
       setComments(data);
       
       // Load replies for each comment
@@ -56,8 +58,9 @@ const CommentsSection = ({ testCaseId }) => {
 
   const handleCommentSubmit = async (commentData) => {
     const newComment = await commentService.create({
-      ...commentData,
-      testCaseId
+...commentData,
+      testCaseId: testCaseId || undefined,
+      bugId: bugId || undefined
     });
     
     if (newComment) {
@@ -164,8 +167,11 @@ const CommentsSection = ({ testCaseId }) => {
       </div>
 
       {/* New Comment Form */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <CommentForm onSubmit={handleCommentSubmit} />
+<div className="bg-gray-50 rounded-lg p-4">
+        <CommentForm 
+          onSubmit={handleCommentSubmit} 
+          placeholder={`Add a comment about this ${testCaseId ? 'test case' : 'bug'}...`}
+        />
       </div>
 
       {/* Comments List */}

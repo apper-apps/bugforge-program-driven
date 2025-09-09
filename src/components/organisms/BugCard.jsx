@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import BugTimeline from "@/components/organisms/BugTimeline";
 import ApperIcon from "@/components/ApperIcon";
 import PriorityIndicator from "@/components/molecules/PriorityIndicator";
 import StatusBadge from "@/components/molecules/StatusBadge";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
+import CommentsSection from "@/components/organisms/CommentsSection";
+import BugTimeline from "@/components/organisms/BugTimeline";
 const BugCard = ({ bug, onEdit, onDelete, onStatusChange }) => {
+  const [showComments, setShowComments] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
   const getNextStatus = () => {
     const statusFlow = {
@@ -31,7 +33,7 @@ const toggleTimeline = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card hover className="p-6">
+<Card hover className="p-6 space-y-4">
 <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-2">
             <Button
@@ -42,6 +44,18 @@ const toggleTimeline = () => {
               title={showTimeline ? "Hide Timeline" : "Show Timeline"}
             >
               <ApperIcon name="Clock" className="w-4 h-4" />
+            </Button>
+</div>
+          
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowComments(!showComments)}
+              className="text-xs"
+            >
+              <ApperIcon name="MessageCircle" size={14} className="mr-1" />
+              {showComments ? 'Hide' : 'Show'} Comments
             </Button>
           </div>
           <div className="flex items-start gap-3">
@@ -56,10 +70,9 @@ const toggleTimeline = () => {
             </div>
           </div>
         </div>
-
-        <div className="flex items-center gap-4 mb-4">
-          <StatusBadge status={bug.status} type="bug" />
-          <PriorityIndicator priority={bug.severity} showLabel size="sm" />
+<div className="flex items-center gap-4 mb-4">
+          <StatusBadge status={bug.status_c} type="bug" />
+          <PriorityIndicator priority={bug.severity_c} showLabel size="sm" />
         </div>
 
         <div className="space-y-2 mb-4 text-sm">
@@ -96,6 +109,20 @@ const toggleTimeline = () => {
           isOpen={showTimeline}
           onClose={() => setShowTimeline(false)}
         />
+{/* Comments Section */}
+        <AnimatePresence>
+          {showComments && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="border-t border-gray-200 pt-4"
+            >
+              <CommentsSection bugId={bug.Id} />
+            </motion.div>
+          )}
+        </AnimatePresence>
         
         <div className="flex items-center justify-between pt-4 border-t border-gray-200">
           <div className="flex items-center gap-2">

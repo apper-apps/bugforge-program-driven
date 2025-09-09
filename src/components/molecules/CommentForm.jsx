@@ -17,9 +17,9 @@ const CommentForm = ({
   const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => state.user);
 
-  const handleUserMentions = (inputText) => {
-    // Simple user mention detection - could be enhanced with actual user lookup
-    return inputText.replace(/@(\w+)/g, '<span class="text-primary font-medium">@$1</span>');
+const handleUserMentions = (inputText) => {
+    // Enhanced user mention detection with better styling
+    return inputText.replace(/@(\w+)/g, '<span class="text-primary font-medium bg-primary/10 px-1 rounded">@$1</span>');
   };
 
   const handleSubmit = async (e) => {
@@ -32,17 +32,20 @@ const CommentForm = ({
 
 setLoading(true);
     try {
-      const result = await onSubmit({
+const result = await onSubmit({
         text: text.trim(),
         authorId: user?.userId || user?.Id,
-        mentions: extractMentions(text)
+        mentions: extractMentions(text),
+        entityType: 'comment'
       });
 
       // Create notifications for mentioned users
       const mentions = extractMentions(text);
       if (mentions.length > 0 && result?.Id) {
         try {
-          await createNotificationsForMentions(mentions, result.Id, user?.userId || user?.Id);
+if (mentions && mentions.length > 0) {
+            await createNotificationsForMentions(mentions, result.Id, user?.userId || user?.Id);
+          }
         } catch (notificationError) {
           console.error("Failed to create notifications for mentions:", notificationError);
         }
@@ -58,26 +61,27 @@ setLoading(false);
 };
 
 const extractMentions = (text) => {
-const mentions = text.match(/@(\w+)/g);
-return mentions ? mentions.map(mention => mention.substring(1)) : [];
+  const mentions = text.match(/@(\w+)/g);
+  return mentions ? mentions.map(mention => mention.substring(1)) : [];
 };
 
 const createNotificationsForMentions = async (mentions, commentId, authorId) => {
-// Note: In a real implementation, you'd need to look up user IDs by username
-// For now, we'll create notifications assuming mentions are user IDs
-for (const mention of mentions) {
-try {
-await notificationService.create({
-user_id_c: mention, // In practice, you'd resolve username to user ID
-comment_id_c: commentId,
-timestamp_c: new Date().toISOString(),
-is_read_c: false,
-Name: `New mention in comment`
-});
-} catch (error) {
-console.error(`Failed to create notification for user ${mention}:`, error);
-}
-}
+  // Enhanced mention notification creation with better error handling
+  if (!mentions || mentions.length === 0) return;
+  
+  for (const mention of mentions) {
+    try {
+      await notificationService.create({
+        user_id_c: mention, // In practice, you'd resolve username to user ID
+        comment_id_c: commentId,
+        timestamp_c: new Date().toISOString(),
+        is_read_c: false,
+        Name: `You were mentioned in a comment`
+      });
+    } catch (error) {
+      console.error(`Failed to create notification for user ${mention}:`, error);
+    }
+  }
 };
 
   const handleTextChange = (e) => {

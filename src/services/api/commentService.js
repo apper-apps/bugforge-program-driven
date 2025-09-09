@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 const tableName = 'comment_c';
 
 export const commentService = {
-  async getByTestCase(testCaseId) {
+async getByTestCase(testCaseId) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -56,8 +56,60 @@ export const commentService = {
     }
   },
 
-async create(commentData) {
+  async getByBug(bugId) {
     try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "CreatedOn" } },
+          { field: { Name: "CreatedBy" } },
+          { field: { Name: "ModifiedOn" } },
+          { field: { Name: "text_c" } },
+          { field: { Name: "author_id_c" } }
+        ],
+        where: [
+          {
+            FieldName: "Name",
+            Operator: "Contains",
+            Values: [`Bug ${bugId}`],
+            Include: true
+          }
+        ],
+        orderBy: [
+          {
+            fieldName: "CreatedOn",
+            sorttype: "ASC"
+          }
+        ]
+      };
+
+      const response = await apperClient.fetchRecords(tableName, params);
+
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching bug comments:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return [];
+    }
+  },
+
+async create(commentData) {
+try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
         apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
@@ -67,9 +119,11 @@ async create(commentData) {
       const params = {
         records: [
           {
-            Name: `Comment on Test Case`,
+            Name: commentData.testCaseId 
+              ? `Comment on Test Case`
+              : `Comment on Bug ${commentData.bugId}`,
             text_c: commentData.text,
-            test_case_id_c: parseInt(commentData.testCaseId),
+            test_case_id_c: commentData.testCaseId ? parseInt(commentData.testCaseId) : null,
             author_id_c: parseInt(commentData.authorId)
           }
         ]
@@ -117,8 +171,8 @@ async create(commentData) {
     }
   },
 
-  async processMentions(text, commentId, authorId) {
-    // Simple mention detection - looks for @username patterns
+async processMentions(text, commentId, authorId) {
+    // Enhanced mention detection with better error handling
     const mentionPattern = /@(\w+)/g;
     const mentions = [...text.matchAll(mentionPattern)];
     
@@ -128,17 +182,113 @@ async create(commentData) {
       for (const mention of mentions) {
         const username = mention[1];
         // In a real implementation, you would lookup the user ID by username
-        // For now, we'll create a notification with a placeholder
+        // For now, we'll create a notification assuming username is the user ID
         try {
           await notificationService.createForMention(
-            authorId, // Placeholder - should be actual mentioned user ID
+            username, // Should be resolved to actual user ID
             commentId,
-            'User' // Placeholder - should be actual author name
+            'System' // Should be actual author name
           );
         } catch (error) {
           console.error('Failed to create mention notification:', error);
         }
       }
+    }
+  },
+
+  async edit(id, commentData) {
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        records: [
+          {
+            Id: parseInt(id),
+            text_c: commentData.text
+          }
+        ]
+      };
+
+      const response = await apperClient.updateRecord(tableName, params);
+
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return null;
+      }
+
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success);
+        const failedUpdates = response.results.filter(result => !result.success);
+
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update comment ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`);
+          
+          failedUpdates.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error}`);
+            });
+            if (record.message) toast.error(record.message);
+          });
+        }
+
+        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+      }
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error updating comment:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      throw error;
+    }
+  },
+
+  async delete(id) {
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        RecordIds: [parseInt(id)]
+      };
+
+      const response = await apperClient.deleteRecord(tableName, params);
+
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return false;
+      }
+
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success);
+        const failedDeletions = response.results.filter(result => !result.success);
+
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete comment ${failedDeletions.length} records:${JSON.stringify(failedDeletions)}`);
+          
+          failedDeletions.forEach(record => {
+            if (record.message) toast.error(record.message);
+          });
+        }
+
+        return successfulDeletions.length > 0;
+      }
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error deleting comment:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      throw error;
     }
   },
 
