@@ -19,6 +19,8 @@ case "/projects":
 return "Projects";
 case "/team-members":
 return "Team Members";
+case "/activity-logs":
+return "Activity Logs";
 default:
 return "BugForge";
 }

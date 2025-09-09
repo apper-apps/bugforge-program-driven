@@ -13,6 +13,7 @@ const navigation = [
 { name: "Bugs", href: "/bugs", icon: "Bug" },
 { name: "Projects", href: "/projects", icon: "FolderOpen" },
 { name: "Team Members", href: "/team-members", icon: "Users" },
+{ name: "Activity Logs", href: "/activity-logs", icon: "Activity" },
 ];
 
   const SidebarContent = () => (

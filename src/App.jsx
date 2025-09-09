@@ -16,6 +16,7 @@ import Projects from "@/components/pages/Projects";
 import PromptPassword from "@/components/pages/PromptPassword";
 import TestCaseDetails from "@/components/pages/TestCaseDetails";
 import TeamMembers from "@/components/pages/TeamMembers";
+import ActivityLogs from "@/components/pages/ActivityLogs";
 export const AuthContext = createContext(null);
 
 function App() {
@@ -121,6 +122,7 @@ function App() {
 <Route path="bugs" element={<Bugs />} />
 <Route path="projects" element={<Projects />} />
 <Route path="team-members" element={<TeamMembers />} />
+<Route path="activity-logs" element={<ActivityLogs />} />
 </Route>
       </Routes>
       
