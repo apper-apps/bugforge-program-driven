@@ -1,4 +1,5 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import React from "react";
 
 const tableName = 'activity_log_c';
 
@@ -148,6 +149,12 @@ const activityLogService = {
       }
       return [];
     }
+},
+
+  // Validate action type against allowed picklist values
+  validateActionType(actionType) {
+    const validActions = ['assigned to bug', 'assigned to test case', 'mentioned in comment'];
+    return validActions.includes(actionType) ? actionType : 'mentioned in comment';
   },
 
   async create(activityData) {
@@ -162,9 +169,9 @@ const activityLogService = {
         records: [
           {
             Name: `${activityData.action_type_c} - ${new Date().toISOString()}`,
-            user_id_c: parseInt(activityData.user_id_c),
+user_id_c: parseInt(activityData.user_id_c),
             timestamp_c: activityData.timestamp_c || new Date().toISOString(),
-            action_type_c: activityData.action_type_c,
+            action_type_c: this.validateActionType(activityData.action_type_c),
             details_c: activityData.details_c
           }
         ]
