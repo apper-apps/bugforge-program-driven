@@ -135,9 +135,9 @@ const TestCaseModal = ({ isOpen, onClose, onSave, testCase, projects }) => {
                     required
                   >
                     <option value="">Select a project</option>
-                    {projects.map(project => (
+{projects.map(project => (
                       <option key={project.Id} value={project.Id.toString()}>
-                        {project.name}
+                        {project.name_c || project.Name}
                       </option>
                     ))}
                   </Select>

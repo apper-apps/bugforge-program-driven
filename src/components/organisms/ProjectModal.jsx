@@ -15,11 +15,11 @@ const ProjectModal = ({ isOpen, onClose, onSave, project }) => {
   });
 
   useEffect(() => {
-    if (project) {
+if (project) {
       setFormData({
-        name: project.name || "",
-        description: project.description || "",
-        status: project.status || "active"
+        name: project.name_c || project.Name || "",
+        description: project.description_c || "",
+        status: project.status_c || "active"
       });
     } else {
       setFormData({
