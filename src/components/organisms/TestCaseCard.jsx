@@ -17,20 +17,20 @@ const TestCaseCard = ({ testCase, onEdit, onDelete, onRun }) => {
       transition={{ duration: 0.3 }}
     >
       <Card hover className="p-6">
-        <div className="flex items-start justify-between mb-4">
+<div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3">
-            <PriorityIndicator priority={testCase.priority} />
+            <PriorityIndicator priority={testCase.priority_c} />
             <div>
               <h3 className="font-semibold text-gray-900 mb-1">
-                {testCase.title}
+                {testCase.title_c || testCase.Name || 'Untitled Test Case'}
               </h3>
               <p className="text-sm text-gray-600 line-clamp-2">
-                {testCase.description}
+                {testCase.description_c || 'No description available'}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <StatusBadge status={testCase.status} type="testCase" />
+            <StatusBadge status={testCase.status_c} type="testCase" />
           </div>
         </div>
 
@@ -38,21 +38,21 @@ const TestCaseCard = ({ testCase, onEdit, onDelete, onRun }) => {
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500">Steps:</span>
             <span className="font-medium text-gray-900">
-              {testCase.steps?.length || 0}
+              {testCase.steps_c ? testCase.steps_c.split('\n').filter(step => step.trim()).length : 0}
             </span>
           </div>
           
-          {testCase.lastRun && (
+          {testCase.last_run_c && (
             <>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-500">Last Run:</span>
                 <span className="text-gray-900">
-                  {format(new Date(testCase.lastRun), "MMM d, yyyy")}
+                  {format(new Date(testCase.last_run_c), "MMM d, yyyy")}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-500">Result:</span>
-                <StatusBadge status={testCase.lastResult} type="testResult" />
+                <StatusBadge status={testCase.last_result_c} type="testResult" />
               </div>
             </>
           )}
