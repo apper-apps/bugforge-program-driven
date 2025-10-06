@@ -204,26 +204,24 @@ const data = testCaseId
                   </div>
                 </div>
 
-                {canEdit(comment) && (
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setEditingComment(comment.Id)}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      <ApperIcon name="Edit" className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteComment(comment.Id)}
-                      className="text-gray-400 hover:text-red-600"
-                    >
-                      <ApperIcon name="Trash2" className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
+<div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setEditingComment(comment.Id)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <ApperIcon name="Edit" className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDeleteComment(comment.Id)}
+                    className="text-gray-400 hover:text-red-600"
+                  >
+                    <ApperIcon name="Trash2" className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
 
               {/* Comment Content */}
@@ -305,26 +303,24 @@ const data = testCaseId
                           </div>
                         </div>
 
-                        {canEdit(reply) && (
-                          <div className="flex items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setEditingReply({ id: reply.Id, commentId: comment.Id })}
-                              className="text-gray-400 hover:text-gray-600"
-                            >
-                              <ApperIcon name="Edit" className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteReply(reply.Id, comment.Id)}
-                              className="text-gray-400 hover:text-red-600"
-                            >
-                              <ApperIcon name="Trash2" className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        )}
+<div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditingReply({ id: reply.Id, commentId: comment.Id })}
+                            className="text-gray-400 hover:text-gray-600"
+                          >
+                            <ApperIcon name="Edit" className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteReply(reply.Id, comment.Id)}
+                            className="text-gray-400 hover:text-red-600"
+                          >
+                            <ApperIcon name="Trash2" className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </div>
 
                       {editingReply?.id === reply.Id ? (
