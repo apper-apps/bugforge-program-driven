@@ -21,6 +21,8 @@ const TestCaseCard = ({ testCase, onEdit, onDelete, onRun }) => {
       <Card hover className="p-6">
 <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-3">
+            <pre>{JSON.stringify(testCase, null, 2)}</pre>
+            <pre>{JSON.stringify(user, null, 2)}</pre>
             <PriorityIndicator priority={testCase.priority_c} />
             <div>
               <h3 className="font-semibold text-gray-900 mb-1">
