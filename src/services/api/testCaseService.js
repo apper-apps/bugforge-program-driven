@@ -4,6 +4,22 @@ import Error from "@/components/ui/Error";
 
 const tableName = 'test_case_c';
 
+/**
+ * TEST CASE VISIBILITY POLICY
+ * ============================
+ * All test cases are visible to both owner and non-owner users.
+ * 
+ * Policy Details:
+ * - The Owner field (System field) is intentionally excluded from all fetch operations
+ * - No ownership-based filtering is applied in any query methods (getAll, getById, getByProject)
+ * - All users can view all test cases regardless of who created them
+ * - This universal visibility applies across the entire application
+ * 
+ * Implementation Note:
+ * This is an intentional design decision to ensure transparency and collaboration.
+ * Do not add Owner field to queries or implement ownership-based filtering.
+ */
+
 export const testCaseService = {
   async getAll() {
     try {
