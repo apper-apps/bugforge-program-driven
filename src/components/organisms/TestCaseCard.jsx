@@ -10,7 +10,8 @@ import ApperIcon from "@/components/ApperIcon";
 import { useNavigate } from "react-router-dom";
 const TestCaseCard = ({ testCase, onEdit, onDelete, onRun }) => {
   const navigate = useNavigate();
-  
+  const user = useSelector((state) => state.user.user);
+  const isOwner = testCase.createdBy_c?.Id === user?.userId;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -70,37 +71,28 @@ const TestCaseCard = ({ testCase, onEdit, onDelete, onRun }) => {
               <ApperIcon name="MessageCircle" className="w-4 h-4" />
               Comments
             </Button>
-            {(() => {
-              const user = useSelector((state) => state.user.user);
-              const isOwner = testCase.createdBy_c?.Id === user?.userId;
-              
-              return (
-                <>
-                  {isOwner && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onEdit(testCase)}
-                      className="inline-flex items-center gap-2"
-                    >
-                      <ApperIcon name="Edit" className="w-4 h-4" />
-                      Edit
-                    </Button>
-                  )}
-                  {isOwner && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDelete(testCase.Id)}
-                      className="text-error hover:bg-error/10 inline-flex items-center gap-2"
-                    >
-                      <ApperIcon name="Trash2" className="w-4 h-4" />
-                      Delete
-                    </Button>
-                  )}
-                </>
-              );
-            })()}
+{isOwner && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onEdit(testCase)}
+                className="inline-flex items-center gap-2"
+              >
+                <ApperIcon name="Edit" className="w-4 h-4" />
+                Edit
+              </Button>
+            )}
+            {isOwner && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDelete(testCase.Id)}
+                className="text-error hover:bg-error/10 inline-flex items-center gap-2"
+              >
+                <ApperIcon name="Trash2" className="w-4 h-4" />
+                Delete
+              </Button>
+            )}
           </div>
           
           <Button
