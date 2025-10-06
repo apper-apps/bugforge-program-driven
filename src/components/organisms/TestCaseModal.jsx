@@ -23,7 +23,7 @@ if (testCase) {
         projectId: testCase.project_id_c ? testCase.project_id_c.toString() : "",
         title: testCase.title_c || "",
         description: testCase.description_c || "",
-        steps: testCase.steps_c ? (typeof testCase.steps_c === 'string' ? JSON.parse(testCase.steps_c) : testCase.steps_c) : [""],
+steps: testCase.steps_c ? (Array.isArray(testCase.steps_c) ? testCase.steps_c : (typeof testCase.steps_c === 'string' ? (() => { try { return JSON.parse(testCase.steps_c); } catch { return [testCase.steps_c]; } })() : [""])) : [""],
         expectedResult: testCase.expected_result_c || "",
         priority: testCase.priority_c || "medium"
       });
