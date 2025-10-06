@@ -6,8 +6,11 @@ const tableName = 'test_case_c';
 
 /**
  * TEST CASE VISIBILITY POLICY
+* ============================
+ * TEST CASE VISIBILITY POLICY
  * ============================
- * All test cases are visible to both owner and non-owner users.
+ * All test cases are visible to ALL authenticated users.
+ * Users can view both their own created test cases AND test cases created by others.
  * 
  * Policy Details:
  * - The Owner field (System field) is intentionally excluded from all fetch operations
@@ -17,7 +20,8 @@ const tableName = 'test_case_c';
  * 
  * Implementation Note:
  * This is an intentional design decision to ensure transparency and collaboration.
- * Do not add Owner field to queries or implement ownership-based filtering.
+ * Do NOT add Owner field to queries or implement ownership-based filtering.
+ * All authenticated users should see the complete test case repository.
  */
 
 export const testCaseService = {
