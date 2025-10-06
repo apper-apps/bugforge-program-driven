@@ -18,14 +18,14 @@ const TestCaseModal = ({ isOpen, onClose, onSave, testCase, projects }) => {
   });
 
   useEffect(() => {
-    if (testCase) {
+if (testCase) {
       setFormData({
-        projectId: testCase.projectId || "",
-        title: testCase.title || "",
-        description: testCase.description || "",
-        steps: testCase.steps || [""],
-        expectedResult: testCase.expectedResult || "",
-        priority: testCase.priority || "medium"
+        projectId: testCase.project_id_c ? testCase.project_id_c.toString() : "",
+        title: testCase.title_c || "",
+        description: testCase.description_c || "",
+        steps: testCase.steps_c ? (typeof testCase.steps_c === 'string' ? JSON.parse(testCase.steps_c) : testCase.steps_c) : [""],
+        expectedResult: testCase.expected_result_c || "",
+        priority: testCase.priority_c || "medium"
       });
     } else {
       setFormData({

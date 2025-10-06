@@ -201,10 +201,10 @@ const filteredTestCases = testCases.filter(testCase => {
                 >
                   <ApperIcon name="X" className="w-5 h-5" />
                 </button>
-              </div>
+</div>
               
               <p className="text-gray-600 mb-6">
-                How did the test "{runningTestCase.title}" perform?
+                How did the test "{runningTestCase.title_c}" perform?
               </p>
               
               <div className="flex gap-3">
